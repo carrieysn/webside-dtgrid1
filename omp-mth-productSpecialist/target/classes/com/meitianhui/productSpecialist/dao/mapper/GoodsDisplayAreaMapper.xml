@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.productSpecialist.dao.GoodsDisplayAreaMapper">
+
+	<!-- 根据标识查询分类信息 -->
+	<select id="queryDisplayArea" parameterType="String" resultType="GoodsDisplayArea">
+		SELECT pda.display_area_id,pda.display_area,pda.icon_path,pda.is_sell FROM ps_display_area pda
+		 WHERE pda.display_area_id=#{display_area_id} AND pda.status='normal';
+	</select>
+	
+	<!-- 查询展馆所有信息列表，并查询出相应展馆推荐产品数量,对展馆与产品相同的进行去重 -->
+	<select id="queryDisplayAreaListFullInfo" resultType="GoodsDisplayArea">
+		SELECT pda.display_area_id, pda.display_area, pda.icon_path, pda.sort_order, pda.status, 
+	  	 DATE_FORMAT(pda.created_date, '%Y-%m-%d %H:%i:%s') created_date, pda.remark, t1.goods_count FROM ps_display_area pda
+	  	 LEFT JOIN (SELECT display_area_id, COUNT(1) goods_count FROM 
+	  	 (SELECT DISTINCT re.goods_id,re.display_area_id FROM ps_goods_recommend re INNER JOIN ps_goods pg ON re.goods_id = pg.goods_id WHERE pg.status='normal') pgr GROUP BY display_area_id) t1
+	  	 ON pda.display_area_id = t1.display_area_id and pda.status='normal'
+	   ORDER BY pda.sort_order;
+	</select>
+	
+	<!-- 查询是否开放销售展馆列表信息 -->
+	<select id="queryDisplayAreaList" resultType="GoodsDisplayArea">
+		SELECT pda.display_area_id, pda.display_area, pda.icon_path FROM ps_display_area pda WHERE pda.is_sell='N' AND pda.status='normal' ORDER BY pda.sort_order;
+	</select>
+	
+	<!-- 根据产品标识，查询产品所有的展馆信息 -->
+	<select id="queryDisplayAreaListByGoodsId" parameterType="String" resultType="GoodsDisplayArea">
+		SELECT pda.display_area_id,pda.display_area,pda.icon_path,pda.is_sell FROM ps_display_area pda 
+		  WHERE pda.display_area_id IN(
+ 		 	 SELECT pgr.display_area_id FROM ps_goods_recommend pgr WHERE pgr.goods_id =#{goods_id}
+		  ) AND pda.status='normal' ORDER BY pda.sort_order
+	</select>
+</mapper>

@@ -1,0 +1,272 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%request.setAttribute("title", "销售报表");%>
+<%@ include file="/WEB-INF/jsp/mobile/common/common.jsp"%>
+<body style="background:#ffffff;">
+	<header>
+		<div class="head">
+			<a href="javascript: window.history.go(-1);" class="return-two"><em></em></a>
+			<label class="title">销售报表</label>
+		</div>
+	</header><!-- /header -->
+	<div class="icon-filter top-40">
+		${area_name}&nbsp;&nbsp;&nbsp;<em id="date_type_text">昨日</em><a href="javascript:void(0);" class="small-icons"></a>
+		<ul class="select-nav">
+			<li><a href="javascript:void(0);" date_type="yesterday" class="sel">昨日</a></li>
+			<li><a href="javascript:void(0);" date_type="week">最近7天</a></li>
+			<li><a href="javascript:void(0);" date_type="recently_30">最近30天</a></li>
+		</ul>
+	</div>
+	<ul class="title-list cutover-list">
+		<li class="sel">超级返</li>
+		<li>我要批</li>
+		<%-- <li>批发榜</li>  --%>
+		<li>明星榜</li>
+	</ul>
+	<div class="goods-list">
+		<%-- 领了么报表 --%>
+		<div class="goods">
+			<div style="overflow:auto;">
+			<table class="table-list" id="freeGetReportList" template="freeGetReportListTpl" url="${ctx}/mobile/report/loadFgOrderStatisticsList?token=${token}"></table>
+			<script id="freeGetReportListTpl" type="text/html">
+				<tr class="ti">
+					<td>日期</td>
+					<td style="text-align:right">订单数</td>
+					<td style="text-align:right">订单金额</td>
+					<td style="text-align:right">返款金额</td>
+					<td style="text-align:right">参与门店</td>
+					<td style="text-align:right">参与顾客</td>
+				</li>
+				{{each list as sales i}}
+					<tr>
+						<td>{{sales.order_date}}</td>
+						<td style="text-align:right">{{sales.order_qty}}</td>
+						<td style="text-align:right">{{sales.gmv_amount | formatNumber}}</td>
+						<td style="text-align:right">{{sales.paid_amount | formatNumber}}</td>
+						<td style="text-align:right">{{sales.store_qty}}</td>
+						<td style="text-align:right">{{sales.consumer_qty}}</td>
+					</tr>
+				{{/each}}
+			</script>
+			</div>
+		</div>
+		<%-- 我要批报表 --%>
+		<div class="goods" style="display:none;">
+			<table class="table-list" id="selfTradeReportList" template="selfTradeReportListTpl" url="${ctx}/mobile/report/loadPsOrderStatisticsList?token=${token}"></table>
+			<script id="selfTradeReportListTpl" type="text/html">
+				<tr class="ti">
+					<td>日期</td>
+					<td style="text-align:right">订单数</td>
+					<td style="text-align:right">订单金额</td>
+				</tr>
+				{{each list as sales i}}
+					<tr>
+						<td>{{sales.date_id}}</td>
+						<td style="text-align:right">{{sales.order_qty}}</td>
+						<td style="text-align:right">{{sales.gmv_amount | formatNumber}}</td>
+					</tr>
+				{{/each}}
+			</script>
+		</div>
+		<%-- 批发榜
+		<div class="goods" style="display:none;">
+			<ul class="money-list top0">
+				<li>
+					<div>
+						<p class="ti">订单数量</p>
+						<p class="price" id="orderCount">0</p>
+					</div>
+					<div>
+						<p class="ti">累计金额</p>
+						<p class="price" id="moneyCount">￥0</p>
+					</div>
+				</li>
+			</ul>
+			<div style="overflow:auto;">
+			<table class="table-list" id="salesList" template="salesListTpl" url="${ctx}/mobile/report/querySaleSummaryList?token=${token}"></table>
+			<script id="salesListTpl" type="text/html">
+				<tr class="ti">
+					<td>门店名称</td>
+					<td style="text-align:right">采购记录</td>
+					<td style="text-align:right">交易金额</td>
+				</tr>
+				{{each list as sales i}}
+					<tr>
+						<td>{{sales.stores_name}}</td>
+						<td style="text-align:right">{{sales.order_qty}}</td>
+						<td style="text-align:right">{{sales.total_amount | formatNumber}}</td>
+					</tr>
+				{{/each}}
+			</script>
+			</div>
+		</div> --%>
+		<%-- 明星榜 --%>
+		<div class="goods" style="display:none;">
+			<div style="overflow:auto;">
+			<table class="table-list wid-td" id="storeRankingList" template="storeRankingListTpl" url="${ctx}/mobile/report/loadStoreRankingList?token=${token}"></table>
+			<script id="storeRankingListTpl" type="text/html">
+				<tr class="ti">
+					<td style="text-align:center">排名</td>
+					<td style="text-align:left">门店</td>
+					<td style="text-align:right">交易总额</td>
+					<td style="text-align:right">超级返</td>
+					<td style="text-align:right">我要批</td>
+					<td style="text-align:right">一元购</td>
+					<td style="text-align:right">惠易定</td>
+					<td style="text-align:right">收银</td>
+					<td style="text-align:right">会员数</td>
+				</li>
+				{{each list as rank i}}
+					<tr>
+						<td style="text-align:center">{{i + 1}}</td>
+						<td style="text-align:left">{{rank.member_info}}</td>
+						<td style="text-align:right">{{rank.total_amount | formatNumber}}</td>
+						<td style="text-align:right">{{rank.DDLX_07_amount | formatNumber}}</td>
+						<td style="text-align:right">{{rank.DDLX_01_amount | formatNumber}}</td>
+						<td style="text-align:right">{{rank.DDLX_03_amount | formatNumber}}</td>
+						<td style="text-align:right">{{rank.DDLX_06_amount | formatNumber}}</td>
+						<td style="text-align:right">{{rank.DDLX_04_amount | formatNumber}}</td>
+						<td style="text-align:right">{{rank.member_qty}}</td>
+					</tr>
+				{{/each}}
+			</script>
+			</div>
+		</div>
+	</div>
+	<%@ include file="/WEB-INF/jsp/mobile/common/footer.jsp"%>
+</body>
+<script type="text/javascript">
+	$(function(){
+		//销售报表切换
+		$('.title-list li').click(function(){
+			$('.title-list li').removeClass('sel');
+			$(this).addClass('sel');
+			$('.goods-list .goods').hide();
+			var index = $(this).index('.title-list li');
+			$('.goods-list .goods').eq(index).show();
+			loadData();
+		});
+		
+		$('.icon-filter .small-icons').click(function(){
+			$('.select-nav').slideToggle(200);
+		});
+		//切换日期查询条件
+		 $('.select-nav li').click(function(){
+			 $('.select-nav li a').removeClass('sel');
+			 var text = $(this).find('a').addClass('sel').text();
+			 $('#date_type_text').text(text);
+			 $('.select-nav').slideToggle(200);
+			 $('.goods-list .table-list').data('isLoad', false);
+			 loadData();
+		 });
+		
+		loadData();
+		//加载数据
+		function loadData(){
+			var index = $('.title-list li.sel').index('.title-list li');
+			if(index == 0){
+				//加载领了么报表
+				loadFreeGetReportList();
+			} else if(index == 1){
+				//加载我要批报表
+				loadSelfTradeReportList();
+			} else if(index ==2){
+				//加载批发榜列表
+				//loadSalesList();
+				//加载明星榜列表
+				loadStoreRankingList();
+			}
+		}
+		
+		//加载领了么报表
+		function loadFreeGetReportList(){
+			var table = '#freeGetReportList';
+			var isLoad = $(table).data('isLoad');
+			if(!isLoad){
+				var url = $(table).attr('url'), templateId = $(table).attr('template') || '';
+				var params = {'area_id': '${area_id}', 'area_type': '${area_type}', 'date_type': $('.select-nav li a.sel').attr('date_type')};
+				var loading = layer.load(2);
+				M.post(url, params, function(result){
+					layer.close(loading);
+					var html = template(templateId, {list: result.data});
+					$(table).html(html);
+					$(table).data('isLoad',true);
+				}, function(result){
+					layer.close(loading);
+					M.alert('加载列表失败！');
+				});
+			}
+		}
+		
+		//加载我要批报表
+		function loadSelfTradeReportList(){
+			var table = '#selfTradeReportList';
+			var isLoad = $(table).data('isLoad');
+			if(!isLoad){
+				var url = $(table).attr('url'), templateId = $(table).attr('template') || '';
+				var params = {'area_id': '${area_id}', 'area_type': '${area_type}', 'date_type': $('.select-nav li a.sel').attr('date_type')};
+				var loading = layer.load(2);
+				M.post(url, params, function(result){
+					layer.close(loading);
+					var html = template(templateId, {list: result.data});
+					$(table).html(html);
+					$(table).data('isLoad',true);
+				}, function(result){
+					layer.close(loading);
+					M.alert('加载列表失败！');
+				});
+			}
+		}
+		
+		//加载批发榜列表
+		function loadSalesList(){
+			var table = '#salesList';
+			var isLoad = $(table).data('isLoad');
+			if(!isLoad){
+				var url = $(table).attr('url'), templateId = $(table).attr('template') || '';
+				var params = {'area_id': '${area_id}', 'area_type': '${area_type}', 'date_type': $('.select-nav li a.sel').attr('date_type')};
+				var loading = layer.load(2);
+				M.post(url, params, function(result){
+					layer.close(loading);
+					var html = template(templateId, {list: result.data});
+					$(table).html(html);
+					if(result.data.length < 1){
+						M.alert('暂无数据！');
+					}
+					var orderCount = 0, moneyCount = 0;
+					var list = result.data;
+					for(var i = 0 ;i < list.length;i++){
+						orderCount += parseInt(list[i].order_qty);
+						moneyCount += parseFloat(list[i].total_amount);
+					}
+					$("#orderCount").text(orderCount);
+					$("#moneyCount").text("￥" + parseFloat(moneyCount).toFixed(2));
+					$(table).data('isLoad',true);
+				}, function(result){
+					layer.close(loading);
+					M.alert('加载列表失败！');
+				});
+			}
+		}
+		
+		//加载明星榜
+		function loadStoreRankingList(){
+			var table = '#storeRankingList';
+			var isLoad = $(table).data('isLoad');
+			if(!isLoad){
+				var url = $(table).attr('url'), templateId = $(table).attr('template') || '';
+				var params = {'area_id': '${area_id}', 'area_type': '${area_type}', 'date_type': $('.select-nav li a.sel').attr('date_type')};
+				var loading = layer.load(2);
+				M.post(url, params, function(result){
+					layer.close(loading);
+					var html = template(templateId, {list: result.data});
+					$(table).html(html);
+					$(table).data('isLoad',true);
+				}, function(result){
+					layer.close(loading);
+					M.alert('加载列表失败！');
+				});
+			}
+		}
+	});
+</script>
+</html>

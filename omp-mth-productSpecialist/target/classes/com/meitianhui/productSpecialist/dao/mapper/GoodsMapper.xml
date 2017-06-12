@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.productSpecialist.dao.GoodsMapper">
+	<!-- 货品基本字段列表 -->
+	<sql id="base_column_list">
+		 pg.goods_id, pg.goods_code, pg.title, pg.desc1, pg.area_id, pg.label, pg.owner_id, pg.category, pg.display_area, pg.contact_person, pg.contact_tel, pg.pic_info, pg.pic_detail_info,
+		 pg.recommend_num, pg.attention_num, pg.grade_num, pg.comment_num, pg.status, DATE_FORMAT(pg.created_date, '%Y-%m-%d %H:%i:%s') created_date, pg.remark
+	</sql>
+	
+	<!-- 查询货品所有信息SQL -->
+	<sql id="goods_full_info_list">
+		SELECT 
+			pg.goods_id, pg.goods_code, pg.title, pg.desc1, pg.label, pg.category, pg.display_area, pg.pic_info, pg.recommend_num, pg.attention_num, pg.grade_num, 
+			pg.comment_num, pg.status, DATE_FORMAT(pg.created_date, '%Y-%m-%d %H:%i:%s') created_date, pg.remark,eu.name user_name, gd.grade_avg 
+		FROM ps_goods pg 
+		LEFT JOIN  ed_user eu ON pg.owner_id = eu.user_id
+ 		LEFT JOIN (SELECT pgg.goods_id,FORMAT(AVG(pgg.total_grade),1) grade_avg FROM ps_goods_grade pgg GROUP BY pgg.goods_id) gd ON pg.goods_id = gd.goods_id
+	</sql>
+	
+	<!-- 根据条件查询产品列表 -->
+	<select id="queryGoodsList" parameterType="Map" resultType="GoodsSellExt">
+		<include refid="goods_full_info_list" />
+		<where>
+			pg.status = 'normal'
+			<!-- 关键字查询 -->
+			<if test="keyword != null and keyword != ''">
+				and (pg.goods_code = #{keyword} or pg.title like concat('%',#{keyword},'%'))
+			</if>
+			<!-- 地区查询 -->
+			<if test="area_id != null and area_id != ''">
+				and pg.area_id = #{area_id}
+			</if>
+			<!-- 类目查询 -->
+			<if test="display_area != null and display_area != ''">
+				and pg.display_area like concat('%',#{display_area},'%')
+			</if>
+			<!-- 类型查询 -->
+			<if test="category != null and category != ''">
+				and pg.category=#{category}
+			</if>
+			<!-- 类目列表过滤 -->
+			<if test="display_area_list != null and display_area_list.size() > 0">
+				and
+				<foreach collection="display_area_list" item="item" index="index" separator="or" open="(" close=")">  
+			        pg.display_area like concat('%',#{item},'%')
+			    </foreach>  
+			</if>
+		</where>
+		<!-- 排序 -->
+		<choose>
+			<when test="orderby == 'recommend'"> <!-- 推荐排序 -->
+				ORDER BY pg.recommend_num DESC, pg.created_date DESC
+			</when>
+			<when test="orderby == 'attention'"> <!-- 关注排序 -->
+				ORDER BY pg.attention_num DESC, pg.created_date DESC
+			</when>
+			<when test="orderby == 'grade'"> <!-- 评分排序 -->
+				ORDER BY gd.grade_avg DESC, pg.created_date DESC
+			</when>
+			<when test="orderby == 'comment'"> <!-- 评论排序 -->
+				ORDER BY pg.comment_num DESC, pg.created_date DESC
+			</when>
+			<!-- 默认排序方式 -->
+			<otherwise>
+				ORDER BY pg.created_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 查询用户统计产品列表 -->
+	<select id="queryUserGoodsList" parameterType="Map" resultType="GoodsSellExt">
+		<choose>
+ 		 	<when test="statistics_type == 'publish'"> <!-- 查询用户创建产品列表 -->
+ 		 		<include refid="goods_full_info_list" /> WHERE pg.owner_id = #{user_id} and pg.status='normal'
+ 		 	</when>
+ 		 	<when test="statistics_type == 'attention'"> <!-- 用户关注列表 -->
+ 		 		SELECT T1.* FROM (<include refid="goods_full_info_list" /> WHERE pg.status = 'normal') T1,(SELECT DISTINCT goods_id FROM ps_goods_attention WHERE user_id=#{user_id}) T2 WHERE T1.goods_id = T2.goods_id
+ 		 	</when>
+ 		 	<when test="statistics_type == 'comment'"> <!-- 用户评论列表 -->
+ 		 		SELECT T1.* FROM (<include refid="goods_full_info_list" /> WHERE pg.status = 'normal') T1,(SELECT DISTINCT goods_id FROM ps_goods_comment WHERE user_id=#{user_id}) T2 WHERE T1.goods_id = T2.goods_id
+ 		 	</when>
+ 		 	<when test="statistics_type == 'recommend'"> <!-- 用户推荐列表 -->
+ 		 		SELECT T1.* FROM (<include refid="goods_full_info_list" /> WHERE pg.status = 'normal') T1,(SELECT DISTINCT goods_id FROM ps_goods_recommend WHERE user_id=#{user_id}) T2 WHERE T1.goods_id = T2.goods_id
+ 		 	</when>
+ 		 	<otherwise>
+ 		 		<include refid="goods_full_info_list" /> WHERE 1=2
+ 		 	</otherwise>
+ 		 </choose>
+	</select>
+	
+	<!-- 新增货品信息 -->
+ 	<insert id="saveGoods" parameterType="Goods">  
+	     insert into ps_goods(
+	     	goods_id, goods_code, title, desc1,area_id, label, owner_id, category, display_area, contact_person, contact_tel, pic_info,pic_detail_info,
+	     	recommend_num, attention_num, grade_num, comment_num, status, created_date, remark
+		 )values(
+		 	#{goods_id}, #{goods_code}, #{title},#{desc1},#{area_id},#{label},#{owner_id}, #{category}, #{display_area}, #{contact_person},#{contact_tel},
+		 	#{pic_info},#{pic_detail_info},0,0,0,0,#{status},#{created_date}, #{remark}
+		 )
+	</insert>
+	
+	<!-- 修改货品信息 -->
+	<update id="updateGoods" parameterType="Goods">
+		update ps_goods
+		<set>
+			<if test="title != null">
+				title=#{title},
+			</if>
+			<if test="desc1 != null">
+				desc1=#{desc1},
+			</if>
+			<if test="area_id != null">
+				area_id=#{area_id},
+			</if>
+			<if test="label != null">
+				label=#{label},
+			</if>
+			<if test="category != null">
+				category=#{category},
+			</if>
+			<if test="display_area != null">
+				display_area=#{display_area},
+			</if>
+			<if test="contact_person != null">
+				contact_person=#{contact_person},
+			</if>
+			<if test="contact_tel != null">
+				contact_tel=#{contact_tel},
+			</if>
+			<if test="pic_info != null">
+				pic_info=#{pic_info},
+			</if>
+			<if test="pic_detail_info != null">
+				pic_detail_info=#{pic_detail_info},
+			</if>
+			<if test="remark != null">
+				remark=#{remark},
+			</if>
+		</set>
+		where goods_id=#{goods_id} and status='normal'
+	</update>
+	
+	<!-- 删除产品信息 -->
+	<update id="deleteGoods" parameterType="String">
+		UPDATE ps_goods pg SET pg.status = 'delete' WHERE pg.goods_id = #{goods_id} AND pg.owner_id = #{user_id} AND pg.status='normal';
+	</update>
+	
+	<!-- 删除用户统计信息 -->
+	<update id="deleteUserPublishStatistics" parameterType="String">
+		UPDATE ps_goods_user_statistics pgus set pgus.publish_num = pgus.publish_num - 1 WHERE pgus.user_id =(SELECT pg.owner_id FROM ps_goods pg WHERE pg.goods_id =#{goods_id});
+	</update>
+	<update id="deleteUserRecommendStatistics" parameterType="String">
+		UPDATE ps_goods_user_statistics pgus set pgus.recommend_num = pgus.recommend_num - 1 WHERE pgus.user_id IN (SELECT DISTINCT pgr.user_id FROM ps_goods_recommend pgr WHERE pgr.goods_id=#{goods_id});
+	</update>
+	<update id="deleteUserAttentionStatistics" parameterType="String">
+		UPDATE ps_goods_user_statistics pgus set pgus.attention_num = pgus.attention_num - 1 WHERE pgus.user_id IN (SELECT DISTINCT pga.user_id FROM ps_goods_attention pga WHERE pga.goods_id =#{goods_id});
+	</update>
+	<update id="deleteUserCommentStatistics" parameterType="String">
+		UPDATE ps_goods_user_statistics pgus set pgus.comment_num = pgus.comment_num - 1 WHERE pgus.user_id IN (SELECT DISTINCT pgc.user_id FROM ps_goods_comment pgc WHERE pgc.goods_id=#{goods_id});
+	</update>
+	
+	<!-- 根据货品编号查询单个产品信息 -->
+	<select id="queryOneGoods" parameterType="String" resultType="GoodsSellExt">
+		SELECT <include refid="base_column_list" /> ,IFNULL(eu.name, es.supplier_name) user_name ,IFNULL(eu.tel, es.contact_tel) user_tel FROM ps_goods pg 
+		 LEFT JOIN  ed_user eu ON pg.owner_id = eu.user_id
+		 LEFT JOIN ed_supplier es ON pg.owner_id = es.supplier_id
+ 		WHERE pg.goods_id=#{goods_id} and pg.status='normal'
+	</select>
+	
+	<!-- 根据类型增加产品相应属性的数量 -->
+	<update id="addProductNumByType" parameterType="hashmap">
+		update ps_goods set
+		<choose>
+			<when test="type == 'recommend'">
+				recommend_num = recommend_num + 1
+			</when>
+			<when test="type == 'attention'">
+				attention_num = attention_num + 1
+			</when>
+			<when test="type == 'grade'">
+				grade_num = grade_num + 1
+			</when>
+			<when test="type == 'comment'">
+				comment_num = comment_num + 1
+			</when>
+		</choose>
+		where goods_id =#{goods_id} and status='normal'
+	</update>
+	
+	<!-- 根据组织编号查询所有的组织下所有的产品编号 -->
+	<select id="queryGoodsIdListByTeam" parameterType="String" resultType="String">
+		SELECT pg.goods_id FROM ps_goods pg
+		 WHERE pg.owner_id IN(SELECT eut.user_id FROM ed_user_team eut WHERE eut.team_id=#{team_id}) AND pg.status='normal'
+	</select>
+	
+	<!-- 查询出每个地区的产品数  -->
+	<select id="queryCountByArea" resultType="hashmap">
+		SELECT area_id, COUNT(1) cunt FROM ps_goods pg where pg.status='normal' GROUP BY pg.area_id
+	</select>
+	
+	<!-- 查询商品不同类型的总数信息 -->
+	<select id="queryCategoryCount" resultType="hashmap">
+		SELECT pg.category, COUNT(1) cunt FROM ps_goods pg WHERE pg.status='normal' GROUP BY pg.category
+	</select>
+</mapper>

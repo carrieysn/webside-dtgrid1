@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.productSpecialist.dao.GoodsRecommendMapper">
+	
+	<!-- 添加一条用户推荐产品记录 -->
+	<insert id="addGoodsRecommend" parameterType="GoodsRecommend">
+		insert into ps_goods_recommend
+		(recommend_id, goods_id, user_id, display_area_id, created_date, remark) 
+		values
+		(UUID(), #{goods_id}, #{user_id}, #{display_area_id}, sysdate(), #{remark})
+	</insert>
+	
+	<!-- 添加用户关注产品记录 -->
+	<insert id="addGoodsAttention" parameterType="GoodsAttention">
+		insert into ps_goods_attention
+			(attention_id, goods_id, user_id, created_date, remark)
+		values
+		(UUID(), #{goods_id}, #{user_id}, sysdate(), #{remark})
+	</insert>
+	
+	<!-- 查询用户推荐产品到哪些展馆列表 -->
+	<select id="queryUserRecommendListByGoodsId" parameterType="Map" resultType="GoodsRecommend">
+		SELECT pgr.recommend_id,pgr.goods_id,pgr.user_id,pgr.display_area_id,pgr.created_date,pgr.remark FROM ps_goods_recommend pgr
+		WHERE pgr.user_id = #{user_id} and pgr.goods_id=#{goods_id}
+	</select>
+	
+	<!-- 查询用户是否推荐过产品到某个展馆 display_area_id为空时，查询是否推荐过相同产品-->
+	<select id="isRecommended" parameterType="Map" resultType="long">
+		SELECT COUNT(1) cunt FROM ps_goods_recommend pgr WHERE pgr.user_id = #{user_id} AND pgr.goods_id = #{goods_id}
+		<if test="display_area_id != null">
+			 AND pgr.display_area_id= #{display_area_id}
+		</if>
+	</select>
+	
+	<!-- 查询用户是否关注过指定产品,查询出count数大于一，则关注过 -->
+	<select id="isAttentioned" parameterType="Map" resultType="long">
+		SELECT COUNT(1) cunt FROM ps_goods_attention pga where user_id=#{user_id} and goods_id=#{goods_id}
+	</select>
+</mapper>

@@ -1,0 +1,67 @@
+.login{
+	width: 100%;
+	overflow: hidden;
+}
+.login-wrap{
+	width: 7.333333rem;
+	margin:0 auto;
+	overflow: hidden;
+}
+.login-wrap label{
+	width: 7.333333rem;
+	height: 1.2rem;
+	border-radius: 7.333333rem;
+	display: block;
+	background: #ffffff;
+	margin-top: 0.533333rem;
+}
+.login-wrap label input{
+	color: #ffffff;
+	margin-left: 1.6rem;
+	margin-top: 0.333333rem;
+}
+[data-dpr="1"] .login-wrap label input{
+	font-size: 14px;
+}
+[data-dpr="2"] .login-wrap label input{
+	font-size: 28px;
+}
+[data-dpr="3"] .login-wrap label input{
+	font-size: 42px;
+}
+.login-wrap .log{
+	width: 7.333333rem;
+	color: #ffffff;
+	background: #ef2734;
+	display: block;
+	height: 1.2rem;
+	border-radius: 7.333333rem;
+	margin-top: 0.533333rem;
+	text-align: center;
+	line-height: 1.2rem;
+	letter-spacing: 0.04rem;
+}
+[data-dpr="1"] .login-wrap .log{
+	font-size: 16px;
+}
+[data-dpr="2"] .login-wrap .log{
+	font-size: 32px;
+}
+[data-dpr="3"] .login-wrap .log{
+	font-size: 48px;
+}
+.login-wrap .no{
+	display: block;
+	float: right;
+	color: #ffffff;
+	margin-top: 0.533333rem;
+}
+[data-dpr="1"] .login-wrap .no{
+	font-size: 14px;
+}
+[data-dpr="2"] .login-wrap .no{
+	font-size: 28px;
+}
+[data-dpr="3"] .login-wrap .no{
+	font-size: 42px;
+}

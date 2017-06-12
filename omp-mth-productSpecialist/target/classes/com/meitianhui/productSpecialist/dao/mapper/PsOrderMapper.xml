@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.productSpecialist.dao.PsOrderMapper">
+	
+	<!-- 根据用户标识查询组织标识 -->
+	<select id="getTeamIdByUserId" parameterType="String" resultType="String">
+		select team_id from ed_user_team where user_id=#{user_id} LIMIT 1
+	</select>
+	
+	<!-- 新增商品订单信息 -->
+	<insert id="insertPsOrder" parameterType="PsOrder">
+		insert into ps_order(
+			order_id, order_no, order_date, desc1, desc2, item_num, buyer_company_id, buyer_id, seller_company_id, seller_id, payment_way_key, 
+			total_fee, discount_fee, sale_fee, prepayment, weight, delivery_address,contact_person,contact_tel,logistics,status, created_date, remark 
+		) values(
+			#{order_id}, #{order_no}, #{order_date}, #{desc1}, #{desc2}, #{item_num}, #{buyer_company_id}, #{buyer_id}, #{seller_company_id}, #{seller_id}, #{payment_way_key}, 
+			#{total_fee}, #{discount_fee}, #{sale_fee}, #{prepayment}, #{weight}, #{delivery_address}, #{contact_person}, #{contact_tel}, #{logistics}, #{status}, #{created_date}, #{remark}
+		)
+	</insert>
+	
+	<!-- 批量新增订单商品信息 -->
+	<insert id="insertPsOrderItem" parameterType="List">
+		insert into ps_order_item(
+			order_item_id, order_id, goods_id, goods_title, goods_pic_info, qty, weight, goods_unit, sale_price, total_fee, discount_fee, status, created_date, remark
+		) values
+		 <foreach collection="orderItemList" item="item" index="index" separator="," >
+		 	(#{item.order_item_id}, #{item.order_id}, #{item.goods_id}, #{item.goods_title}, #{item.goods_pic_info}, #{item.qty}, 
+		 	 #{item.weight}, #{item.goods_unit}, #{item.sale_price}, #{item.total_fee}, #{item.discount_fee}, #{item.status}, #{item.created_date}, #{item.remark})
+		 </foreach>
+	</insert>
+	
+	<!-- 更新订单状态信息 -->
+	<update id="updatePsOrderStatus" parameterType="String">
+		update ps_order set status=#{status} where order_id=#{order_id}
+	</update>
+	
+	<!-- 根据订单号查询订单信息 -->
+	<select id="queryPsOrderByNo" parameterType="String" resultType="PsOrder">
+		SELECT * FROM ps_order WHERE order_no=#{order_no}
+	</select>
+	
+	<!-- 根据订单标识查询订单商品信息 -->
+	<select id="queryPsOrderItemByOrderId" parameterType="String" resultType="PsOrderItem">
+		SELECT * FROM ps_order_item WHERE order_id=#{order_id}
+	</select>
+	
+	<!-- 新增公司现金日记账记录 -->
+	<insert id="insertPsCashDailyAccount" parameterType="PsCashDailyAccount">
+		insert into ps_cash_daily_account(
+			 daily_account_id, company_id, order_no, order_date, detail, payment_way_key, trans_company_type, trans_company_id, 
+			 trans_user_id, booking_mark, amount, currency_code, account_date, created_date, remark
+		) values (
+			#{daily_account_id}, #{company_id}, #{order_no}, #{order_date}, #{detail}, #{payment_way_key}, #{trans_company_type}, #{trans_company_id}, 
+			#{trans_user_id}, #{booking_mark}, #{amount}, #{currency_code}, #{account_date}, #{created_date}, #{remark}
+		)
+	</insert>
+	
+	<!-- 新增买方现金日记账 -->
+	<insert id="insertPsCashDailyAccountBuyer" parameterType="PsCashDailyAccountBuyer">
+		insert ps_cash_daily_account_buyer(
+			 daily_account_id, buyer_company_id, buyer_id, order_no, order_date, detail, 
+			 amount, currency_code, account_date, booking_mark, created_date, remark
+		) values(
+			#{daily_account_id}, #{buyer_company_id}, #{buyer_id}, #{order_no}, #{order_date}, #{detail}, 
+			#{amount}, #{currency_code}, #{account_date}, #{booking_mark}, #{created_date}, #{remark}
+		)
+	</insert>
+	
+	<!-- 新增卖方现金日记账-->
+	<insert id="insertPsCashDailyAccountSeller" parameterType="PsCashDailyAccountSeller">
+		insert ps_cash_daily_account_seller(
+			 daily_account_id, seller_company_id, seller_id, order_no, order_date, detail, 
+			 amount, currency_code, account_date, booking_mark, created_date, remark
+		) values(
+			#{daily_account_id}, #{seller_company_id}, #{seller_id}, #{order_no}, #{order_date}, #{detail}, 
+			#{amount}, #{currency_code}, #{account_date}, #{booking_mark}, #{created_date}, #{remark}
+		)
+	</insert>
+</mapper>

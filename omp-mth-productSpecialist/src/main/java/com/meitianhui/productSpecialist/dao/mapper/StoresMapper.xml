@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.productSpecialist.dao.StoresMapper">
+	
+	<!-- 根据条件查询门店列表 -->
+	<select id="queryStoresList" parameterType="hashmap" resultType="hashmap">
+		SELECT es.stores_id,es.stores_name,es.contact_tel,es.contact_person,es.address, edd.data_val business_type_val,ea.path area_path FROM ed_stores es
+ 		 LEFT JOIN ed_data_dict edd ON es.business_type_key = edd.data_key
+		 LEFT JOIN ed_area ea ON es.area_id = ea.area_id
+		<where>
+			<if test="condition != null and condition != ''">
+				AND (es.stores_name like concat('%',#{condition},'%') OR es.contact_tel like concat('%',#{condition},'%') OR es.contact_person like concat('%',#{condition},'%'))
+			</if>
+			<if test="assistant_id != null and assistant_id != ''">
+				AND es.assistant_id = #{assistant_id}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询单个门店详情信息 -->
+	<select id="queryOneStores" parameterType="String" resultType="hashmap">
+		SELECT es.stores_id,es.stores_name,es.contact_tel,es.contact_person,es.address FROM ed_stores es
+		<where>
+			es.stores_id = #{stores_id}
+		</where>
+	</select>
+	
+	<!-- 根据条件查询供应商列表 -->
+	<select id="querySupplier" parameterType="hashmap" resultType="hashmap">
+		select es.supplier_id 'id', es.supplier_name 'text', es.supplier_id,es.supplier_name from ed_supplier es
+		 where es.sys_status='normal' and es.supplier_name LIKE concat('%',#{search_input},'%')
+	</select>
+	
+	<!-- 查询单个供应商信息 -->
+	<select id="queryOneSupplier" parameterType="String" resultType="hashmap">
+		select es.supplier_id, es.supplier_no, es.supplier_name from ed_supplier es
+		 where es.supplier_id = #{supplier_id}
+	</select>
+</mapper>

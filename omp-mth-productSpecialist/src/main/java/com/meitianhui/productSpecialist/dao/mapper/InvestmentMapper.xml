@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.productSpecialist.dao.InvestmentMapper">
+	
+	<sql id="base_investment_sql">
+		SELECT isu.subject_id, isu.title, isu.content, isu.remark, publisher, DATE_FORMAT(isu.created_date, '%Y-%m-%d') created_date,
+			DATE_FORMAT(isu.expiration_date, '%Y-%m-%d') expiration_date, eu.name user_name,et.team_name from ie_subject isu
+		  INNER JOIN ed_user eu on isu.publisher = eu.user_id
+		  INNER JOIN ed_user_team eut on eu.user_id = eut.user_id
+		  INNER join ed_team et on eut.team_id = et.team_id
+	</sql>
+	
+	<!-- 根据条件查询招商列表 -->
+	<select id="queryInvestmentList" parameterType="hashmap" resultType="hashmap">
+		<include refid="base_investment_sql" />
+		<where>
+			<if test="now != null and now != ''">
+				<![CDATA[isu.expiration_date >= #{now}]]>
+			</if>
+			<if test="subject_id != null and subject_id != ''">
+				and isu.subject_id = #{subject_id} 
+			</if>
+			<if test="publisher != null and publisher != null">
+				and isu.publisher = #{publisher}
+			</if>
+		</where>
+		ORDER BY isu.created_date DESC
+	</select>
+	
+	<!-- 查询单个招商信息 -->
+	<select id="queryOneInvestmentDetail" parameterType="String" resultType="hashmap">
+		<include refid="base_investment_sql" />
+		WHERE isu.subject_id = #{subject_id} LIMIT 1
+	</select>
+	
+	<select id="queryOneInvestment" parameterType="hashmap" resultType="IeSubject">
+		SELECT subject_id,title,content, publisher,DATE_FORMAT(expiration_date, '%Y-%m-%d') expiration_date,remark from ie_subject 
+		<where>
+			<if test="subject_id != null and subject_id != ''">
+				subject_id = #{subject_id}
+			</if>
+			<if test="publisher != null and publisher != ''">
+				AND publisher = #{publisher}
+			</if>
+		</where> 
+	</select>
+	
+	<!-- 新增招商信息 -->
+	<insert id="insertInvestment" parameterType="IeSubject">
+		insert into ie_subject 
+			(subject_id, title, content, publisher, expiration_date, created_date, modified_date, remark)
+		values
+		(#{subject_id}, #{title}, #{content}, #{publisher}, #{expiration_date}, #{created_date}, #{modified_date}, #{remark})
+	</insert>
+	
+	<!-- 更新招商信息 -->
+	<update id="updateInvestment" parameterType="IeSubject">
+		update ie_subject
+		<set>
+			modified_date = #{modified_date},
+			<if test="title != null and title != ''">
+				title = #{title},
+			</if>
+			<if test="content != null and content != ''">
+				content = #{content},
+			</if>
+			<if test="expiration_date != null and expiration_date != ''">
+				expiration_date = #{expiration_date},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</set>
+		<where>
+			subject_id = #{subject_id}
+		</where>
+	</update>
+	
+	<!-- 删除招商信息 -->
+	<delete id="deleteInvestment" parameterType="String">
+		delete from ie_subject where subject_id=#{subject_id}
+	</delete>
+	
+	<!-- 查询用户招商总数 -->
+	<select id="queryInvesetmentCount" parameterType="String" resultType="int">
+		select count(1) from ie_subject where publisher=#{publisher}
+	</select>
+	
+	<!-- 查询招商评论列表 -->
+	<select id="queryCommentList" parameterType="String" resultType="hashmap">
+		SELECT comment_id, content, eu.name user_name, et.team_name, DATE_FORMAT(ic.created_date, '%Y-%m-%d %H:%i:%s') created_date from ie_comment ic
+		  INNER JOIN ed_user eu on ic.commentator = eu.user_id
+		  LEFT JOIN ed_user_team eut on eu.user_id = eut.user_id
+		  LEFT join ed_team et on eut.team_id = et.team_id
+		WHERE ic.subject_id = #{subject_id}
+		ORDER BY ic.created_date DESC
+	</select>
+	
+	<!-- 新增招商评论 -->
+	<insert id="insertSubjectComment" parameterType="IeComment">
+		insert into ie_comment
+			(comment_id, subject_id, content, commentator, created_date)
+		values
+			(#{comment_id}, #{subject_id}, #{content}, #{commentator}, #{created_date});
+	</insert>
+	
+</mapper>

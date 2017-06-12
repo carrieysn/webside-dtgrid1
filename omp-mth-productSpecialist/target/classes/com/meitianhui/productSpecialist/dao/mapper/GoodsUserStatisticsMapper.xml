@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.productSpecialist.dao.GoodsUserStatisticsMapper">
+	<!-- 查询用户货品统计信息 -->
+	<select id="queryUserStatistics" parameterType="String" resultType="GoodsUserStatistics">
+		select * from ps_goods_user_statistics where user_id = #{user_id} LIMIT 1
+	</select>
+
+	<!-- 判断是否存在用户统计信息 -->
+	<select id="existsUserStatistics" parameterType="String" resultType="long">
+		SELECT COUNT(1) FROM ps_goods_user_statistics WHERE user_id=#{user_id}
+	</select>
+	
+	<!-- 初始化用户产品统计信息 -->
+	<insert id="initUserStatistics" parameterType="String">
+		insert into ps_goods_user_statistics(user_id, created_date) values(#{user_id}, sysdate())
+	</insert>
+	
+	<!-- 根据不同类型，增加用户的统计信息，调用一次+1 -->
+	<update id="addUserStatisticsByType" parameterType="Map">
+		update ps_goods_user_statistics set
+		<choose>
+			<when test="type == 'publish'">
+				publish_num = publish_num + 1
+			</when>
+			<when test="type == 'recommend'">
+				recommend_num = recommend_num + 1
+			</when>
+			<when test="type == 'attention'">
+				attention_num = attention_num + 1
+			</when>
+			<when test="type == 'comment'">
+				comment_num = comment_num + 1
+			</when>
+		</choose>
+		where user_id =#{user_id}
+	</update>
+</mapper>

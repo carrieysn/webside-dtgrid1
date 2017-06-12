@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.productSpecialist.dao.GoodsCommentGradeMapper">
+	
+	<!-- 添加产品评分 -->
+	<insert id="addGoodsGrade" parameterType="GoodsGrade">
+		insert into ps_goods_grade(
+			grade_id, goods_id, user_id, total_grade, brand_grade, supplier_grade, 
+			pack_grade, cost_performance_grade, quality_grade, competitiveness_grade, 
+			transportation_grade, appearance_grade, created_date, remark)
+		values(
+			UUID(), #{goods_id}, #{user_id}, #{total_grade}, #{brand_grade}, #{supplier_grade},
+			#{pack_grade}, #{cost_performance_grade}, #{quality_grade}, #{competitiveness_grade}, 
+			#{transportation_grade}, #{appearance_grade}, sysdate(), #{remark})
+	</insert>
+	
+	<!-- 添加产品评论 -->
+	<insert id="addGoodsComment" parameterType="GoodsComment">
+		insert into ps_goods_comment(comment_id, goods_id, user_id, content, created_date) values(UUID(), #{goods_id}, #{user_id}, #{content}, sysdate());
+	</insert>
+	
+	<!--  查询用户是否对产品评论过 -->
+	<select id="isCommented" parameterType="Map" resultType="long">
+		SELECT COUNT(1) cunt FROM ps_goods_comment pgc WHERE pgc.goods_id=#{goods_id} AND pgc.user_id=#{user_id}
+	</select>
+	
+	<!-- 查询产品评论列表信息 -->
+	<select id="queryGoodsCommentList" parameterType="Map" resultType="GoodsComment">
+		select pgc.comment_id, pgc.goods_id, pgc.user_id, pgc.content, DATE_FORMAT(pgc.created_date, '%Y-%m-%d %H:%i:%s') created_date, eu.name user_name from ps_goods_comment pgc 
+		  LEFT JOIN ed_user eu ON pgc.user_id = eu.user_id 
+		  where pgc.goods_id=#{goods_id}
+		order by pgc.created_date desc
+	</select>
+</mapper>

@@ -1,0 +1,466 @@
+/*头部*/
+.header-wrap .header {
+    width: 100%;
+    height: 60px;
+    min-width: 1000px;
+    background-color: #252024;
+    position: fixed;
+    top: 0;
+    z-index: 99;
+}
+.header .logo {
+    background:url(../image/logo.png) center center no-repeat;
+    text-indent: -9999px;
+    width: 150px;
+    height: 60px;
+    display: block;
+    float: left;
+}
+.head-right {
+    width: 100%;
+}
+.had-news{
+	float: right;
+	position: relative;
+}
+.new-h{
+	height: 60px;
+	display: inline-block;
+	text-align: center;
+	margin-right: 20px;
+	float: left;
+}
+.new-h:hover{
+	background: #1D191C;
+}
+/*消息*/
+.new-h em{
+	background: url(../image/menu-em.png) no-repeat;
+	background-position: -170px -38px;
+	width: 18px;
+	height: 19px;
+	float: left;
+	vertical-align: middle;
+	margin-top: 22px;
+	margin-left: 12px;
+}
+.new-h span{
+	background: #F32836;
+    padding:0 7px;
+    height: 20px;
+    color: #FFF;
+    font-size: 12px;
+    float: left;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 10px;
+    vertical-align: top;
+    margin-top: 10px;
+}
+.log-h{
+	float: right;
+	width: 156px;
+	height: 60px;
+	cursor: pointer;
+	padding-left: 15px;
+	position: relative;
+}
+.log-h:after{
+	content:" ";
+	background:url(../image/menu-em.png) no-repeat -189px -45px;
+	width:20px;
+	height:6px;
+	display: inline-block;
+	position: absolute;
+	top:30px;
+	right:12px;
+}
+.log-h:hover{
+	background:#1D191C;
+}
+.log-h p.d{
+	color: #F32836;
+    font-size: 16px;
+    margin: 10px 0 0;
+}
+.log-h p.dl{
+	margin: 17px 0 0;
+}
+.log-h p{
+	color: #fff;
+	font-size: 12px;
+	margin: 0;
+}
+.news-ul{
+	background: #ffffff;
+	display: block;
+	font-size: 14px;
+	width: 340px;
+	-webkit-box-shadow:0 0 10px #e8e8e8;  
+    -moz-box-shadow:0 0 10px #e8e8e8;  
+    box-shadow:0 0 10px #e8e8e8;  
+    position: absolute;
+    top: 60px;
+    right: 190px;
+}
+.news-ul li{
+	font-size: 14px;
+}
+.news-ul li:first-child{
+	background: #ededed;
+	height: 40px;
+	line-height: 40px;
+	text-indent: 20px;
+	font-size: 16px;
+	color: #666666;
+}
+.news-ul li:first-child:hover{
+	background: #ededed;
+}
+.news-ul li:last-child:hover{
+	background: #FFFFFF;
+}
+.news-ul li:last-child{
+	text-align: center;
+	height: 40px;
+	line-height: 40px;
+	color: #9a9898;
+	font-size: 14px;
+	color: #999999;
+	cursor: pointer;
+}
+.news-ul li{
+	width: 340px;
+}
+.news-ul a{
+	 display: block;
+	 font-size: 12px;
+	 width: 320px;
+	 height: 40px;
+	 line-height: 40px;
+	 border-bottom: solid 1px #ededed;
+	 margin: 0 auto;
+	 color: #666666;
+	 background: #FFFFFF;
+	 text-align: left;
+}
+.news-ul li:hover{
+	background: #f7f8f8;
+}
+.news-ul li:hover a{
+	border: none;
+	background: #f7f8f8;
+	border-bottom: solid 1px #ededed;
+}
+/*消息结束*/
+
+/*请登录*/
+.log-ul{
+	background: #252024;
+	text-indent: 15px;
+	width: 170px;
+	padding: 17px 0 11px;
+	line-height: 30px;
+	position: absolute;
+	top: 60px;
+	right: 0;
+}
+.log-ul a{
+	color: #8c7888;
+	font-size: 14px;
+	margin-top: 10px;
+}
+.log-ul .mima:before{
+	content: " ";
+	background:url(../image/menu-em.png) no-repeat;
+	background-position: -118px -36px;
+	width: 12px;
+	height: 19px;
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+.log-ul a:hover{
+	color: #f96116;
+}
+.log-ul .mima:hover:before{background-position: -100px -36px;}
+.log-ul .abort:before{
+	content: " ";
+	background: url(../image/menu-em.png) no-repeat;
+	background-position: 68% 86%;
+	width: 12px;
+	height: 15px;
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+.log-ul .abort:hover:before{background-position: 60% 86%;}
+/*请登录结束*/
+/*头部结束*/
+
+/*左边导航*/
+.menuContainerWrap .slimScrollDiv {
+	position: fixed !important;
+	z-index: 10;
+	overflow: visible !important;
+}
+.menuContainerWrap, .menuContainerWrap * {
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+}
+.subNavBox{
+	width: 150px;
+    background-color: #252024;
+    position: fixed;
+    padding-top: 60px;
+    left: 0;
+    z-index: 98;
+}
+.subNav a{
+	color: #8c7888;
+    font-size: 16px;
+    height: 60px;
+    line-height: 60px;
+    display: block;
+}
+.navContent{
+	display: none;
+	width: 150px;
+	background-color: #191618;
+}
+.navContent li a{
+	color: #8C7888;
+	height: 40px;
+	line-height: 40px;
+	font-size: 14px;
+	text-indent: 20px;
+	display: block;
+}
+.navContent li a:hover {
+    background-color: #1e1a1d;
+    color: #f96116;
+}
+.subNavBox a.forbid{ color: #544651; cursor:not-allowed;}
+.subNavBox a.forbid:hover{ color: #544651; cursor:not-allowed;}
+a.hover-sel,div.subNav a:hover{color: #F96116; background-color: #1e1a1d;}
+.navContent li a.hover-sel{background-color: #282429;}
+.subNavBox div a em{
+	background:url(../image/menu-em.png) no-repeat;
+	width: 18px;
+	height: 19px;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0px 10px 0px 12px;
+}
+.subNav a small:before{width: 20px; height: 20px; margin-top: 22px; content: ""; background:url(../image/menu-em.png) no-repeat; background-position:-40px -37px; vertical-align:middle;float: right;font-weight: bold; margin-right: 7px;}
+.currentDt a small:before{ width: 20px; height: 20px; content: "" !important;margin-top: 22px;  float: right;font-weight: bold; margin-right: 7px;vertical-align:middle;background:url(../image/menu-em.png) no-repeat; background-position:-80px -37px;}
+.subNavBox div.nav-icon-homePage a em{
+	background-position: 2px -38px;
+}
+.subNavBox div.nav-icon-homePage:hover a em, .subNavBox div.nav-icon-homePage a.hover-sel em{
+	background-position: -20px -38px;
+}
+.subNavBox div.nav-icon-homePage a.forbid:hover em {
+	background-position: 2px -38px;
+}
+.subNavBox div.nav-icon-dashboard a em{
+	background-position: 2px 0px;
+}
+.subNavBox div.nav-icon-dashboard:hover a em, .subNavBox div.nav-icon-dashboard a.hover-sel em{
+	background-position: 2px -19px;
+}
+.subNavBox div.nav-icon-dashboard a.forbid:hover em {
+	background-position: 2px 0px;
+}
+.subNavBox div.nav-icon-customer a em {
+    background-position: -19px 0px;
+}
+.subNavBox div.nav-icon-customer:hover a em, .subNavBox div.nav-icon-customer a.hover-sel em{
+	background-position: -19px -19px;
+}
+.subNavBox div.nav-icon-customer a.forbid:hover em {
+	background-position: -19px 0px;
+}
+.subNavBox div.nav-icon-member a em {
+    background-position: -42px 0px;
+}
+.subNavBox div.nav-icon-member:hover a em, .subNavBox div.nav-icon-member a.hover-sel em{
+    background-position: -42px -19px;
+}
+.subNavBox div.nav-icon-member a.forbid:hover em {
+	background-position: -42px 0px;
+}
+.subNavBox div.nav-icon-voucher a em {
+    background-position: -63px -1px;
+}
+.subNavBox div.nav-icon-voucher:hover a em, .subNavBox div.nav-icon-voucher a.hover-sel em{
+    background-position: -63px -20px;
+}
+.subNavBox div.nav-icon-voucher a.forbid:hover em {
+	background-position: -63px -1px;
+}
+.subNavBox div.nav-icon-goods a em {
+    background-position: -84px 0px;
+}
+.subNavBox div.nav-icon-goods:hover a em, .subNavBox div.nav-icon-goods a.hover-sel em{
+    background-position: -84px -19px;
+}
+.subNavBox div.nav-icon-goods a.forbid:hover em {
+	background-position: -84px 0px;
+}
+.subNavBox div.nav-icon-order a em {
+    background-position: -101px 0px;
+}
+.subNavBox div.nav-icon-order:hover a em, .subNavBox div.nav-icon-order a.hover-sel em{
+    background-position: -101px -19px;
+}
+.subNavBox div.nav-icon-order a.forbid:hover em {
+	background-position: -101px 0px;
+}
+.subNavBox div.nav-icon-storage a em  {
+    background-position: -122px 0px;
+}
+.subNavBox div.nav-icon-storage:hover a em, .subNavBox div.nav-icon-storage a.hover-sel em{
+    background-position: -122px -19px;
+}
+.subNavBox div.nav-icon-storage a.forbid:hover em {
+	background-position: -122px 0px;
+}
+.subNavBox div.nav-icon-delivery a em {
+    background-position: -148px 0px;
+}
+.subNavBox div.nav-icon-delivery:hover a em, .subNavBox div.nav-icon-delivery a.hover-sel em{
+    background-position: -148px -18px;
+}
+.subNavBox div.nav-icon-delivery a.forbid:hover em {
+	background-position: -148px 0px;
+}
+.subNavBox div.nav-icon-ad a em  {
+    background-position: -169px 0px;
+}
+.subNavBox div.nav-icon-ad:hover a em, .subNavBox div.nav-icon-ad a.hover-sel em{
+    background-position: -169px -19px;
+}
+.subNavBox div.nav-icon-ad a.forbid:hover em {
+	background-position: -169px 0px;
+}
+.subNavBox div.nav-icon-finance a em {
+    background-position: -192px 0px;
+}
+.subNavBox div.nav-icon-finance:hover a em, .subNavBox div.nav-icon-finance a.hover-sel em{
+    background-position: -192px -19px;
+}
+.subNavBox div.nav-icon-finance a.forbid:hover em {
+	background-position: -192px 0px;
+}
+.subNavBox div.nav-icon-administration a em  {
+    background-position: -216px 0px;
+}
+.subNavBox div.nav-icon-administration:hover a em, .subNavBox div.nav-icon-administration a.hover-sel em{
+    background-position: -216px -19px;
+}
+.subNavBox div.nav-icon-administration a.forbid:hover em {
+	background-position: -216px 0px;
+}
+.subNavBox div.nav-icon-sales:hover a em, .subNavBox div.nav-icon-sales a.hover-sel em{
+    background-position: -83px -20px;
+}
+.subNavBox div.nav-icon-sales a em {
+	background-position: -84px 0;
+}
+.subNavBox div.nav-icon-innerBuyer:hover a em, .subNavBox div.nav-icon-innerBuyer a.hover-sel em{
+    background-position: -101px -19px;
+}
+.subNavBox div.nav-icon-innerBuyer a em {
+	background-position: -101px 0;
+}
+.subNavBox div.nav-icon-community:hover a em, .subNavBox div.nav-icon-community a.hover-sel em{
+    background-position: -52px -57px;
+}
+.subNavBox div.nav-icon-community a em {
+	background-position: -16px -57px;
+}
+.subNavBox div.nav-icon-news:hover a em, .subNavBox div.nav-icon-news a.hover-sel em{
+    background-position: -33px -57px;
+}
+.subNavBox div.nav-icon-news a em {
+	background-position: 2px -57px;
+}
+
+/*店东助手*/
+.subNavBox div.nav-icon-stores:hover a em, .subNavBox div.nav-icon-stores a.hover-sel em{
+    background: url(../image/icon-ddzs2.png) no-repeat;
+}
+.subNavBox div.nav-icon-stores a em {
+	background: url(../image/icon-ddzs.png) no-repeat;
+}
+/*项目推广*/
+.subNavBox div.nav-icon-promote:hover a em, .subNavBox div.nav-icon-promote a.hover-sel em{
+    background: url(../image/icon-xmtg2.png) no-repeat;
+}
+.subNavBox div.nav-icon-promote a em {
+	background: url(../image/icon-xmtg.png) no-repeat;
+}
+/*分子公司*/
+.subNavBox div.nav-icon-company:hover a em, .subNavBox div.nav-icon-company a.hover-sel em{
+    background: url(../image/icon-fzgs2.png) no-repeat;
+}
+.subNavBox div.nav-icon-company a em {
+	background: url(../image/icon-fzgs.png) no-repeat;
+}
+/*任务管理*/
+.subNavBox div.nav-icon-task:hover a em, .subNavBox div.nav-icon-task a.hover-sel em{
+    background: url(../image/icon-rwgl2.png) no-repeat;
+}
+.subNavBox div.nav-icon-task a em {
+	background: url(../image/icon-rwgl.png) no-repeat;
+}
+/*地推*/
+.subNavBox div.nav-icon-storeSpecialist:hover a em, .subNavBox div.nav-icon-storeSpecialist a.hover-sel em{
+    background: url(../image/icon-dt2.png) no-repeat;
+}
+.subNavBox div.nav-icon-storeSpecialist a em {
+	background: url(../image/icon-dt.png) no-repeat;
+}
+/* 尾部 */
+.footer {
+    width: 100%;
+	float: right;
+}
+.fot {
+   color: #666666;
+   font-size: 12px;
+   height: 95px;
+    line-height: 95px;
+   margin-left: 170px;
+	margin-right: 30px;
+	min-width: 1100px;
+	border-top: solid 1px #DDDDDD;
+	text-align: center;
+}
+/* 尾部结束 */
+
+/*中间内容*/
+.main-container-wrap {
+    width: 100%;
+    min-height: 100%;
+    float: right;
+    margin-top: 60px;
+}
+.main-container {
+    padding-left: 170px;
+    padding-right: 30px;
+    min-width: 1100px;
+
+}
+.current {
+    color: #999;
+    font-size: 14px;
+    margin-top: 18px;
+}
+
+
+
+
+
